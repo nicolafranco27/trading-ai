@@ -28,7 +28,10 @@ def get_ai_data(ticker, q, unita, budget):
     try:
         p = "1d" if unita=="m" else "7d" if unita=="h" else "2y"
         i = "1m" if unita=="m" else "60m" if unita=="h" else "1d"
-        df = yf.download(ticker, period=p, interval=i, progress=False, auto_adjust=True)
+        
+        # Usare .history() invece di .download() perché è più stabile sui server Cloud
+        asset = yf.Ticker(ticker)
+        df = asset.history(period=p, interval=i)
         
         if df.empty:
             return f"Nessun dato per {ticker}", "white"

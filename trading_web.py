@@ -26,8 +26,10 @@ with st.expander("⚙️ IMPOSTAZIONI ANALISI", expanded=True):
 
 def get_ai_data(ticker, q, unita, budget):
     try:
-        p = "1d" if unita=="m" else "7d" if unita=="h" else "2y"
-        i = "1m" if unita=="m" else "60m" if unita=="h" else "1d"
+        # Usiamo 7d anziché 5d per i minuti, con intervallo 5m che è molto più stabile
+        # rispetto a 1m (in particolare su server cloud e durante i continui rollover dei futures)
+        p = "7d" if unita=="m" else "1mo" if unita=="h" else "2y"
+        i = "5m" if unita=="m" else "1h" if unita=="h" else "1d"
         
         # Usare .history() invece di .download() perché è più stabile sui server Cloud
         asset = yf.Ticker(ticker)
